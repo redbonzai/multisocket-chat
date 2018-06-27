@@ -1,1 +1,2 @@
-"# multisocket-chat node, webpack multi socket chat system." 
+# multisocket-chat 
+node, webpack multi socket chat system.
