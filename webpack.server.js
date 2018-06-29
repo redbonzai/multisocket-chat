@@ -1,6 +1,8 @@
 
 var path = require("path")
-    fs = require("fs");
+    fs = require("fs")
+    webpack = require("webpack")
+    UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const nodeModules = fs.readdirSync("./node_modules").filter(d => d != ".bin");
 function ignoreNodeModules(context, request, callback ) {
@@ -16,6 +18,11 @@ function ignoreNodeModules(context, request, callback ) {
 }
 
 function createConfig(isDebug) {
+
+    const plugins = [];
+    if( !isDebug ) {
+        plugins.push( new UglifyJsPlugin());
+    }
 
     /** Webpack config */
     return {
@@ -39,18 +46,18 @@ function createConfig(isDebug) {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "eslint-loader",
-                 options: {emitWarning: true}
+                options: {emitWarning: true}
 
              },
              {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "babel-loader",
-
              },
             ]
         },
-        externals: [ignoreNodeModules] // this hooks in the above created method.
+        externals: [ignoreNodeModules], // this hooks in the above created method.
+        plugins: plugins
 
 
     };
